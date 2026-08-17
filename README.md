@@ -1,6 +1,9 @@
 # OverFPS · 视频补帧 / 超分
 基于 **mpv + VapourSynth + RIFE（ONNX Runtime / DirectML）**
 
+> **部署**：`python setup.py` 一键安装（自动下载模型/运行时，详见 [Docs/SETUP.md](Docs/SETUP.md)）；
+> 架构设计见 [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)。
+
 ---
 
 ## 一、唯一入口：`overfps.py`
