@@ -11,7 +11,8 @@ import sys
 import vapoursynth as vs
 from vapoursynth import core
 
-sys.path.insert(0, r"D:\Project\Repo\OverFPS\realtime-interp\vsmlrt\scripts")
+sys.path.insert(0, os.path.join(os.environ.get("OFPS_ROOT", r"D:\Project\Repo\OverFPS"),
+                                "runtime", "vsmlrt", "scripts"))
 import vsmlrt
 
 SRC = os.environ.get("VS_INPUT", r"D:\Project\Repo\OverFPS\video\东京食尸 第一季第6集.mp4")

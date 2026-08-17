@@ -15,7 +15,9 @@ from fractions import Fraction
 import vapoursynth as vs
 from vapoursynth import core
 
-sys.path.insert(0, r"D:\Project\Repo\OverFPS\realtime-interp\vsmlrt\scripts")
+# 由 overfps.py 注入 OFPS_ROOT; vsmlrt 在 runtime\vsmlrt\scripts 下
+sys.path.insert(0, os.path.join(os.environ.get("OFPS_ROOT", r"D:\Project\Repo\OverFPS"),
+                                "runtime", "vsmlrt", "scripts"))
 import vsmlrt
 
 INTERP = os.environ.get("VS_INTERP", "1") == "1"

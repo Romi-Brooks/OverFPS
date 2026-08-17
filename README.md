@@ -2,21 +2,21 @@
 
 把视频**拖到入口**，立即以 **2 倍帧率**播放（23.976fps → 47.95fps），基于 **mpv + VapourSynth + RIFE（ONNX Runtime / DirectML）**，本机 RTX 4060 Laptop 实测。
 
-> PowerShell / bat 方案已全部退役：入口统一为 `ofps.py`，运行环境为独立虚拟环境 `.venv`，不污染系统 Python。
+> PowerShell / bat 方案已全部退役：入口统一为 `overfps.py`，运行环境为独立虚拟环境 `.venv`，不污染系统 Python。
 > 架构设计见 `..\ARCHITECTURE.md`（根目录原则 + 未来可视化解码规划）。
 
 ---
 
-## 一、唯一入口：`ofps.py`
+## 一、唯一入口：`overfps.py`
 
 ```
-python ofps.py                             交互式菜单（显卡/插帧/模型/超分/视频 → 实时 or 离线）
-python ofps.py "视频.mp4"                  直接播放（等效 play，自动选独显）
-python ofps.py play "视频.mp4" [选项]       补帧/超分播放
-python ofps.py gpu                         列出显卡（DXGI 索引 | 名称 | 显存）
-python ofps.py bench "视频.mp4" [选项]      基准：补帧速度（不产文件）
-python ofps.py render "输入" [输出] [选项]      离线渲染：补帧 / 超分 / 组合
-python ofps.py render-sr "输入" [输出] [选项]   离线渲染：补帧 + 超分（默认 RealESRGAN）
+python overfps.py                             交互式菜单（显卡/插帧/模型/超分/视频 → 实时 or 离线）
+python overfps.py "视频.mp4"                  直接播放（等效 play，自动选独显）
+python overfps.py play "视频.mp4" [选项]       补帧/超分播放
+python overfps.py gpu                         列出显卡（DXGI 索引 | 名称 | 显存）
+python overfps.py bench "视频.mp4" [选项]      基准：补帧速度（不产文件）
+python overfps.py render "输入" [输出] [选项]      离线渲染：补帧 / 超分 / 组合
+python overfps.py render-sr "输入" [输出] [选项]   离线渲染：补帧 + 超分（默认 RealESRGAN）
 ```
 
 play / render / bench 通用选项：
@@ -39,27 +39,27 @@ play / render / bench 通用选项：
 
 **自由组合示例：**
 ```
-python ofps.py play "a.mp4"                            # 仅插帧 (默认)
-python ofps.py play "a.mp4" --sr anime4k               # 插帧 + Anime4K 实时超分
-python ofps.py play "a.mp4" --sr realesrgan --sr-model v3   # 插帧 + RealESRGAN
-python ofps.py play "a.mp4" --no-interp --sr cugan     # 仅超分 (关闭插帧)
-python ofps.py play "a.mp4" --gpu 0 --sr anime4k       # 指定显卡 + 组合
-python ofps.py play "a.mp4" --sub "字幕.ass"           # 手动指定字幕
-python ofps.py bench "a.mp4" --model v4_26 --frames 240  # 对比模型速度
+python overfps.py play "a.mp4"                            # 仅插帧 (默认)
+python overfps.py play "a.mp4" --sr anime4k               # 插帧 + Anime4K 实时超分
+python overfps.py play "a.mp4" --sr realesrgan --sr-model v3   # 插帧 + RealESRGAN
+python overfps.py play "a.mp4" --no-interp --sr cugan     # 仅超分 (关闭插帧)
+python overfps.py play "a.mp4" --gpu 0 --sr anime4k       # 指定显卡 + 组合
+python overfps.py play "a.mp4" --sub "字幕.ass"           # 手动指定字幕
+python overfps.py bench "a.mp4" --model v4_26 --frames 240  # 对比模型速度
 ```
 
 **离线渲染（不需要实时，慢慢跑高质量）：**
 ```
-python ofps.py render "a.mp4"                          # 补帧 2x，保留音频
-python ofps.py render "a.mp4" out.mkv --sr cugan       # 补帧 + CUGAN 超分
-python ofps.py render "a.mp4" --no-interp --sr realesrgan --sr-model v3   # 纯超分不插帧
-python ofps.py render "a.mp4" --frames 600 --start 120 # 只渲染 120s 起的 600 帧
-python ofps.py render-sr "a.mp4"                       # 补帧 + RealESRGAN(默认)
-python ofps.py render "a.mp4" --codec libx265 --crf 22 # HEVC 编码
-python ofps.py render --folder "D:\视频目录"            # 批量渲染整个目录 (自动跳过已有输出)
-python ofps.py render "a.mp4" --burn-sub "字幕.ass"    # 把字幕烧录进画面
-python ofps.py render "a.mp4" --mode fast              # 极速模式 (4K 约 12fps 源)
-python ofps.py render "a.mp4" --mode quality           # 质量模式 (v4_26_heavy 全分辨率)
+python overfps.py render "a.mp4"                          # 补帧 2x，保留音频
+python overfps.py render "a.mp4" out.mkv --sr cugan       # 补帧 + CUGAN 超分
+python overfps.py render "a.mp4" --no-interp --sr realesrgan --sr-model v3   # 纯超分不插帧
+python overfps.py render "a.mp4" --frames 600 --start 120 # 只渲染 120s 起的 600 帧
+python overfps.py render-sr "a.mp4"                       # 补帧 + RealESRGAN(默认)
+python overfps.py render "a.mp4" --codec libx265 --crf 22 # HEVC 编码
+python overfps.py render --folder "D:\视频目录"            # 批量渲染整个目录 (自动跳过已有输出)
+python overfps.py render "a.mp4" --burn-sub "字幕.ass"    # 把字幕烧录进画面
+python overfps.py render "a.mp4" --mode fast              # 极速模式 (4K 约 12fps 源)
+python overfps.py render "a.mp4" --mode quality           # 质量模式 (v4_26_heavy 全分辨率)
 ```
 > 输出自动保留原音频（转 AAC 保证兼容），部分渲染时音频按视频长度截断；默认 2x 帧率。
 > 渲染中显示实时进度条（帧数/百分比/fps/剩余时间）；批量模式逐文件进度 + 汇总。
@@ -73,7 +73,7 @@ python ofps.py render "a.mp4" --mode quality           # 质量模式 (v4_26_hea
 | `balanced` 均衡 | 当前模型全分辨率直接跑 | ~0.5 fps（一集约 19 小时） | 2K 以下 |
 | `quality` 质量 | v4_26_heavy 全分辨率光流（4K 自动降 v4_26 防显存爆） | ≤1080p ~16fps；4K 很慢 | 1080p 细节至上 |
 
-> 交互式菜单（`python ofps.py`）里选完显卡/模型/超分/视频路径后，会再问"处理方式
+> 交互式菜单（`python overfps.py`）里选完显卡/模型/超分/视频路径后，会再问"处理方式
 > (实时/离线)"和"离线画质模式 (极速/均衡/质量)"，共用同一套配置。
 
 `config.json` 持久化（含默认值）：
@@ -159,12 +159,12 @@ python ofps.py render "a.mp4" --mode quality           # 质量模式 (v4_26_hea
 > 实时判定线：输出 ≥ 48fps。720p 全系 lite 实时达标；1080p 全质量实时不了（4060 物理限制），
 > 用 `--scale` / v4_6 或离线渲染。超分引擎：Anime4K 实时（shader 零开销）；
 > RealESRGAN/CUGAN/waifu2x 较重（适合离线或低帧率预览）。
-> 复测：`python ofps.py bench "视频" --model v4_22_lite --frames 240`。
+> 复测：`python overfps.py bench "视频" --model v4_22_lite --frames 240`。
 
 > **重要（"MKV 卡顿"结论）**：真实窗口丢帧回归测试（`tests\drop_test.py`）证明卡顿与容器无关——
 > 720p（MP4/MKV/Hi10P/HEVC10bit）全部 **0 丢帧**；**1080p 丢帧 65.5%**（MP4 与 MKV 完全一样）。
 > 你的 MKV 卡顿 = 它是 **1080p**，全质量 RIFE 只有 ~21fps < 48fps 实时线。
-> **已内置自动适配**：`ofps.py` 探测源分辨率，1080p 自动切换 `v4_6 + 半分辨率光流`
+> **已内置自动适配**：`overfps.py` 探测源分辨率，1080p 自动切换 `v4_6 + 半分辨率光流`
 > （实测 0 丢帧）；`config.json` 的 `auto_res=0` 可关闭（关闭后只警告不切换）。
 
 ---
@@ -173,7 +173,7 @@ python ofps.py render "a.mp4" --mode quality           # 质量模式 (v4_26_hea
 
 ```
 OverFPS\  (根目录)
-├─ ofps.py                   ★ 唯一入口 (播放/渲染/基准/菜单)
+├─ overfps.py                   ★ 唯一入口 (播放/渲染/基准/菜单)
 ├─ setup.py                  一键部署 (venv + 依赖 + 模型 + mpv/ffmpeg)
 ├─ fetch_models.py           模型/后端下载安装 (RIFE + SR + vsort)
 ├─ requirements.txt          Python 依赖 (numpy / onnx)
@@ -181,7 +181,7 @@ OverFPS\  (根目录)
 ├─ models\                   模型目录 (fetch 下载, 不入库; rife/ + rife_v2/ + SR)
 ├─ ARCHITECTURE.md           架构设计（v2 建议 + 可视化解码规划）
 ├─ .venv\                    虚拟环境 (VapourSynth + 插件/后端)
-├─ realtime-interp\
+├─ runtime\
 │  ├─ mpv\                   mpv.exe + portable_config\ (mpv.conf / input.conf / scripts\*.lua)
 │  ├─ ffmpeg\                ffmpeg（离线渲染编码; 无则用 PATH）
 │  ├─ scripts\               play.vpy 实时 / render.vpy 离线 / bench_rife.vpy / list_subs.py

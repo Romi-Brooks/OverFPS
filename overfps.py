@@ -4,12 +4,12 @@
 OverFPS —— 视频补帧 / 超分 统一入口
 ====================================
 用法 (任选):
-  python ofps.py                       交互式菜单 (选择显卡/插帧/超分/视频)
-  python ofps.py "视频.mp4"            直接播放 (等效 play, 自动选独显)
-  python ofps.py play "视频.mp4" [选项] 补帧/超分播放
-  python ofps.py gpu                   列出显卡 (DXGI 索引|名称|显存)
-  python ofps.py render "输入" [输出] [选项]   离线渲染: 补帧
-  python ofps.py render-sr "输入" [输出] [选项] 离线渲染: 补帧+RealESRGAN超分
+  python overfps.py                       交互式菜单 (选择显卡/插帧/超分/视频)
+  python overfps.py "视频.mp4"            直接播放 (等效 play, 自动选独显)
+  python overfps.py play "视频.mp4" [选项] 补帧/超分播放
+  python overfps.py gpu                   列出显卡 (DXGI 索引|名称|显存)
+  python overfps.py render "输入" [输出] [选项]   离线渲染: 补帧
+  python overfps.py render-sr "输入" [输出] [选项] 离线渲染: 补帧+RealESRGAN超分
 
 play / render 选项:
   --model v4_22_lite     RIFE 模型 (v4_26_heavy/v4_26/v4_22_lite/v4_17_lite/v4_15_lite/v4_6)
@@ -40,7 +40,7 @@ except Exception:
 
 # ---------------- 路径 (venv / 便携目录) ----------------
 ROOT = os.path.dirname(os.path.abspath(__file__))          # OverFPS 根目录
-APP = os.path.join(ROOT, "realtime-interp")
+APP = os.path.join(ROOT, "runtime")
 SCRIPTS = os.path.join(APP, "scripts")
 VENV_PY = os.path.join(ROOT, ".venv", "Scripts", "python.exe")
 VS_PATH = os.path.join(ROOT, ".venv", "Lib", "site-packages", "vapoursynth")
@@ -779,7 +779,7 @@ def main():
         cmd_play(_A())
         return
 
-    ap = argparse.ArgumentParser(prog="ofps", description="OverFPS 视频补帧/超分")
+    ap = argparse.ArgumentParser(prog="overfps", description="OverFPS 视频补帧/超分")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p_gpu = sub.add_parser("gpu", help="列出显卡")

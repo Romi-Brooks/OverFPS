@@ -3,8 +3,9 @@
 -- 依赖 venv python 小工具 list_subs.py (UTF-8 安全, 支持中文路径)
 -- 其他加载字幕方式: ① 拖字幕文件进播放窗口 ② 同目录/同名字幕自动加载
 
-local PY = "D:/Project/Repo/OverFPS/.venv/Scripts/python.exe"
-local HELPER = "D:/Project/Repo/OverFPS/realtime-interp/scripts/list_subs.py"
+local root = os.getenv("OFPS_ROOT") or "D:/Project/Repo/OverFPS"
+local PY = root .. "/.venv/Scripts/python.exe"
+local HELPER = root .. "/runtime/scripts/list_subs.py"
 
 local function already_loaded(f)
     local tracks = mp.get_property_native("track-list") or {}

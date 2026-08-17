@@ -26,7 +26,7 @@ except Exception:
     pass
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-APP = os.path.join(ROOT, "realtime-interp")
+APP = os.path.join(ROOT, "runtime")
 VENV_PY = os.path.join(ROOT, ".venv", "Scripts", "python.exe")
 DL = os.path.join(ROOT, ".runtime", "dl")
 SEVENZ = os.path.join(ROOT, "tools", "7zr.exe")
@@ -157,7 +157,7 @@ def install_ffmpeg(skip):
     ffmpeg_dir = os.path.join(APP, "ffmpeg")
     os.makedirs(ffmpeg_dir, exist_ok=True)
     shutil.copy2(found, os.path.join(ffmpeg_dir, "ffmpeg.exe"))
-    print("✓ ffmpeg 已安装到 realtime-interp\\ffmpeg\\")
+    print("✓ ffmpeg 已安装到 runtime\\ffmpeg\\")
 
 
 def copy_python_dlls():
@@ -180,7 +180,7 @@ def configure_vapoursynth():
 
 def verify():
     print("\n验证 GPU 探测 ...")
-    p = run([VENV_PY, os.path.join(ROOT, "ofps.py"), "gpu"])
+    p = run([VENV_PY, os.path.join(ROOT, "overfps.py"), "gpu"])
     if p.returncode == 0:
         print("\n部署完成! 运行: python ofps.py menu")
     else:

@@ -21,14 +21,14 @@ python setup.py
      + vsort（DirectML 后端：onnxruntime + DirectML.dll）
    - `external-models` 的 5 个新版 RIFE 模型（v4.15_lite / v4.17_lite / v4.22_lite /
      v4.26 / v4.26_heavy，约 90MB）
-5. 下载 **mpv**（shinchiro 最新静态构建，解压到 `realtime-interp\mpv\`，配套的
+5. 下载 **mpv**（shinchiro 最新静态构建，解压到 `runtime\mpv\`，配套的
    `portable_config\` 已在仓库内）
 6. **ffmpeg**：优先使用系统 PATH 里已安装的 ffmpeg；没有则从 gyan.dev 自动下载到
-   `realtime-interp\ffmpeg\`
+   `runtime\ffmpeg\`
 7. 复制 `python3.dll` / `python312.dll` 到 `.venv\` 根（VSScript 探测需要），
-   生成 vapoursynth 配置，最后跑 `python ofps.py gpu` 验证
+   生成 vapoursynth 配置，最后跑 `python overfps.py gpu` 验证
 
-完成后：`python ofps.py menu`。
+完成后：`python overfps.py menu`。
 
 ## 可选参数
 
@@ -65,8 +65,8 @@ models/
 ├── RealESRGANv2/  cugan/  waifu2x/  dpir/
 ```
 
-> 注意：`realtime-interp\vsmlrt\scripts\vsmlrt.py` 已升级到 v15.16 并打补丁支持
-> `VSMLRT_MODELS_PATH` 环境变量（ofps.py 自动注入为项目 `models\` 目录）。
+> 注意：`runtime\vsmlrt\scripts\vsmlrt.py` 已升级到 v15.16 并打补丁支持
+> `VSMLRT_MODELS_PATH` 环境变量（overfps.py 自动注入为项目 `models\` 目录）。
 > RIFE 主模型与 rife_v2 合并模型必须来自同一版本，混用会报错。
 
 ## 离线/无网环境

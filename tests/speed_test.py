@@ -14,8 +14,8 @@ except Exception:
     pass
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SCRIPTS = os.path.join(ROOT, "realtime-interp", "scripts")
-MPV = os.path.join(ROOT, "realtime-interp", "mpv", "mpv.exe")
+SCRIPTS = os.path.join(ROOT, "runtime", "scripts")
+MPV = os.path.join(ROOT, "runtime", "mpv", "mpv.exe")
 VS_PATH = os.path.join(ROOT, ".venv", "Lib", "site-packages", "vapoursynth")
 
 FILES = [

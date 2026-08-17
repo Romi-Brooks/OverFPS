@@ -5,11 +5,11 @@ __pycache__/
 *.pyc
 
 # ---- 大二进制: 超过 GitHub 单文件 100MB 限制, 见 SETUP.md 恢复 ----
-realtime-interp/mpv/mpv.exe
-realtime-interp/ffmpeg/ffmpeg.exe
+runtime/mpv/mpv.exe
+runtime/ffmpeg/ffmpeg.exe
 
 # ---- mpv 运行时缓存 ----
-realtime-interp/mpv/portable_config/cache/
+runtime/mpv/portable_config/cache/
 
 # ---- 备份 / 用户素材 ----
 downloads_backup.7z
