@@ -1,0 +1,5 @@
+# OverFPS Python 依赖 (requirements.txt)
+# 注意: VapourSynth 本体不在 PyPI, 由 setup.py 从官方 GitHub Release 下载 wheel 安装;
+#       onnxruntime 由 vsort 插件自带 (DirectML), 无需 pip 安装。
+numpy>=1.24
+onnx>=1.14

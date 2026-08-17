@@ -19,7 +19,7 @@ APP = os.path.join(ROOT, "realtime-interp")
 SCRIPTS = os.path.join(APP, "scripts")
 MPV = os.path.join(APP, "mpv", "mpv.exe")
 VS_PATH = os.path.join(ROOT, ".venv", "Lib", "site-packages", "vapoursynth")
-VIDEO = os.path.join(ROOT, "video", "东京食尸 第一季第6集.mp4")
+VIDEO = os.path.join(ROOT, "tests", "demo.mp4")
 PROBE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sync_probe.lua")
 
 # (名称, video-sync, hwdec)

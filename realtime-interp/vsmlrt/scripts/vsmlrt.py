@@ -84,7 +84,7 @@ plugins_path: str = get_plugins_path()
 trtexec_path: str = os.path.join(plugins_path, "vsmlrt-cuda", "trtexec")
 migraphx_driver_path: str = os.path.join(plugins_path, "vsmlrt-hip", "migraphx-driver")
 tensorrt_rtx_path: str = os.path.join(plugins_path, "vsmlrt-cuda", "tensorrt_rtx")
-models_path: str = os.path.join(plugins_path, "models")
+models_path: str = os.environ.get("VSMLRT_MODELS_PATH", os.path.join(plugins_path, "models"))
 
 
 class Backend:

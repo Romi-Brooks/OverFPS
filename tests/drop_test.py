@@ -21,11 +21,8 @@ VS_PATH = os.path.join(ROOT, ".venv", "Lib", "site-packages", "vapoursynth")
 PROBE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drop_probe.lua")
 
 FILES = [
-    ("MP4 h264 720p",    os.path.join(ROOT, "video", "东京食尸 第一季第6集.mp4")),
-    ("MKV hi10p",        os.path.join(ROOT, "tests", "test_hi10p.mkv")),
-    ("MKV hevc10",       os.path.join(ROOT, "tests", "test_hevc10.mkv")),
-    ("MP4 h264 1080p",   os.path.join(ROOT, "tests", "test_1080p.mp4")),
-    ("MKV h264 1080p",   os.path.join(ROOT, "tests", "test_1080p.mkv")),
+    ("合成 720p",    os.path.join(ROOT, "tests", "demo.mp4")),
+    ("合成 4K",      os.path.join(ROOT, "tests", "demo_4k.mp4")),
 ]
 
 DROP_RE = re.compile(r"DROPPROBE time=([\d.-]+) frame_drop=([-\d]+) vo_drop=([-\d]+)")

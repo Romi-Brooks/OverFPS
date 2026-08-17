@@ -45,8 +45,19 @@ SCRIPTS = os.path.join(APP, "scripts")
 VENV_PY = os.path.join(ROOT, ".venv", "Scripts", "python.exe")
 VS_PATH = os.path.join(ROOT, ".venv", "Lib", "site-packages", "vapoursynth")
 VSPIPE = os.path.join(VS_PATH, "vspipe.exe")
-MPV = os.path.join(APP, "mpv", "mpv.exe")
-FFMPEG = os.path.join(APP, "ffmpeg", "ffmpeg.exe")
+MODELS = os.path.join(ROOT, "models")
+
+
+def _resolve_tool(repo_exe, name):
+    """优先仓库内二进制; 否则用 PATH 里的 (用户侧安装 ffmpeg/mpv 时)"""
+    if os.path.exists(repo_exe):
+        return repo_exe
+    found = shutil.which(name)
+    return found or repo_exe
+
+
+MPV = _resolve_tool(os.path.join(APP, "mpv", "mpv.exe"), "mpv")
+FFMPEG = _resolve_tool(os.path.join(APP, "ffmpeg", "ffmpeg.exe"), "ffmpeg")
 CONFIG = os.path.join(ROOT, "config.json")
 SHADER_RESTORE = os.path.join(APP, "shaders", "Anime4K_Restore_CNN_Soft_VL.glsl")
 SHADER_UPSCALE = os.path.join(APP, "shaders", "Anime4K_Upscale_CNN_x2_M.glsl")
@@ -229,6 +240,8 @@ def make_env(interp, model, scale, sr, sr_model, gpu, fp16="1"):
     env["OFPS_SR_MODEL"] = str(sr_model)
     env["OFPS_SHADER_UPSCALE"] = SHADER_UPSCALE
     env["OFPS_ROOT"] = ROOT
+    # vsmlrt 补丁: 模型目录指向项目 models/ (不依赖 venv)
+    env["VSMLRT_MODELS_PATH"] = MODELS
     return env
 
 
@@ -589,15 +602,16 @@ def render_one(cfg, args, with_sr, video, output, gpu):
     fast_upscale = None
     # ---- 画质模式覆盖 (fast/quality 重写模型/光流比例/超分) ----
     if mode == "fast":
-        model, scale, sr = "v4_6", "0.5", "none"
+        # 极速: 1080p 处理 + 当前轻模型, 放大回原分辨率 (无需 v4_6 特殊模型)
+        model, scale, sr = cfg.get("model", "v4_22_lite"), "1.0", "none"
         res = probe_res(video)
         if res and res[1] > 1080:
             work_h = 1080
             fast_upscale = res  # 由 ffmpeg scale 放大回, 不占 vspipe
-            print("极速模式: 降到 1080p 补帧 (v4_6+半光流), 输出放大回 %dx%d, 超分已忽略"
-                  % (res[0], res[1]))
+            print("极速模式: 降到 1080p 补帧 (%s), 输出放大回 %dx%d, 超分已忽略"
+                  % (model, res[0], res[1]))
         else:
-            print("极速模式: v4_6 + 半分辨率光流 (超分已忽略)")
+            print("极速模式: 当前模型直接补帧 (超分已忽略)")
     elif mode == "quality":
         work_h = 0
         res_q = probe_res(video)

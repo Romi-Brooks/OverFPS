@@ -173,21 +173,26 @@ python ofps.py render "a.mp4" --mode quality           # 质量模式 (v4_26_hea
 
 ```
 OverFPS\  (根目录)
-├─ ofps.py                   ★ 唯一入口
+├─ ofps.py                   ★ 唯一入口 (播放/渲染/基准/菜单)
+├─ setup.py                  一键部署 (venv + 依赖 + 模型 + mpv/ffmpeg)
+├─ fetch_models.py           模型/后端下载安装 (RIFE + SR + vsort)
+├─ requirements.txt          Python 依赖 (numpy / onnx)
 ├─ config.json               用户配置
+├─ models\                   模型目录 (fetch 下载, 不入库; rife/ + rife_v2/ + SR)
 ├─ ARCHITECTURE.md           架构设计（v2 建议 + 可视化解码规划）
-├─ downloads_backup.7z       安装包/模型源备份（原 downloads/ 压缩）
-├─ .venv\                    虚拟环境 (VapourSynth + onnxruntime + 插件/模型)
+├─ .venv\                    虚拟环境 (VapourSynth + 插件/后端)
 ├─ realtime-interp\
 │  ├─ mpv\                   mpv.exe + portable_config\ (mpv.conf / input.conf / scripts\*.lua)
-│  ├─ ffmpeg\                ffmpeg（离线渲染编码）
-│  ├─ scripts\               play.vpy 实时管线 / render.vpy 离线管线 / bench_rife.vpy / list_subs.py
-│  ├─ vsmlrt\                vsmlrt Python 包装 + dll
+│  ├─ ffmpeg\                ffmpeg（离线渲染编码; 无则用 PATH）
+│  ├─ scripts\               play.vpy 实时 / render.vpy 离线 / bench_rife.vpy / list_subs.py
+│  ├─ vsmlrt\scripts\vsmlrt.py   vsmlrt v15.16 (已打补丁: VSMLRT_MODELS_PATH)
 │  ├─ shaders\               Anime4K 实时超分 shader
 │  └─ launchers\             （可放测试文件，脚本已全部退役）
-├─ tests\                    无头回归：sync_test.py 同步探针 / keydump / binding_test
-└─ video\                    测试视频（勿删）
+├─ tests\                    无头回归 + 合成测试样片 (demo.mp4 / demo_4k.mp4)
+└─ video\                    本地素材（勿上传）
 ```
+
+> **部署**：克隆后 `python setup.py` 一键完成（详见 `SETUP.md`）。模型约 930MB 自动下载。
 
 ## 八、已知问题
 

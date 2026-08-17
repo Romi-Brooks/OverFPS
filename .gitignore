@@ -15,5 +15,8 @@ realtime-interp/mpv/portable_config/cache/
 downloads_backup.7z
 video/
 
+# ---- 模型 (由 fetch_models.py 下载, 约 600MB+) ----
+models/
+
 # ---- 临时测试产物 ----
 tests/_*

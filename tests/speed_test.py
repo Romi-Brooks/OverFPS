@@ -19,10 +19,8 @@ MPV = os.path.join(ROOT, "realtime-interp", "mpv", "mpv.exe")
 VS_PATH = os.path.join(ROOT, ".venv", "Lib", "site-packages", "vapoursynth")
 
 FILES = [
-    ("MP4 h264 720p",        os.path.join(ROOT, "video", "东京食尸 第一季第6集.mp4")),
-    ("MKV hi10p",            os.path.join(ROOT, "tests", "test_hi10p.mkv")),
-    ("MKV hevc10",           os.path.join(ROOT, "tests", "test_hevc10.mkv")),
-    ("MKV h264 1080p",       os.path.join(ROOT, "tests", "test_1080p.mkv")),
+    ("合成 720p",        os.path.join(ROOT, "tests", "demo.mp4")),
+    ("合成 4K",          os.path.join(ROOT, "tests", "demo_4k.mp4")),
 ]
 
 FRAMES = 240

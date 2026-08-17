@@ -1,46 +1,75 @@
-# OverFPS 部署说明（克隆仓库后）
+# OverFPS 部署说明
 
-本仓库只包含**源码 / 配置 / 脚本**，运行时二进制与模型因体积与 GitHub 限制不纳入版本控制。
-从零部署步骤如下。
+仓库只包含**源码 / 配置 / 脚本 / 测试样片**。运行时（mpv、ffmpeg、VapourSynth、
+vsmlrt 后端、全部模型）由 `setup.py` 一键从官方源下载安装，**模型不纳入版本控制**
+（约 600MB+，由 `fetch_models.py` 负责）。
 
-## 1. 恢复运行时二进制（mpv / ffmpeg）
-
-- **有本机备份**：解压根目录 `downloads_backup.7z`，其中 `mpv.7z`、`ffmpeg.7z` 解出
-  `mpv.exe` 放到 `realtime-interp\mpv\`，`ffmpeg.exe` 放到 `realtime-interp\ffmpeg\`。
-- **无备份**：从官网下载对应版本：
-  - mpv：https://sourceforge.net/projects/mpv-player-windows/files/ （选择 64bit 静态构建，
-    与 `realtime-interp\mpv\portable_config\` 配套，0.41+ 均可）
-  - ffmpeg：https://www.gyan.dev/ffmpeg/builds/ （release 版，取 `ffmpeg.exe`）
-  - 注意：`portable_config\`（mpv.conf / input.conf / scripts\*.lua）已在仓库内，直接使用即可。
-
-## 2. 准备 Python 虚拟环境
+## 一键部署（推荐）
 
 ```bat
-py -3.12 -m venv .venv
-.venv\Scripts\python -m pip install -U pip
+git clone https://github.com/Romi-Brooks/OverFPS.git
+cd OverFPS
+python setup.py
 ```
 
-VapourSynth 与模型依赖（推荐从 `downloads_backup.7z` 恢复，比在线装省事）：
-1. 解压 `vapoursynth-portable.zip` 中的 wheel：`pip install vapoursynth-*-win_amd64.whl`
-2. 解压 `vsmlrt-scripts.7z` → `realtime-interp\vsmlrt\scripts\vsmlrt.py`
-3. 解压 `vsmlrt-vsort.7z` 与 `vsmlrt-vsncnn.7z` → 对应 dll 放入
-   `.venv\Lib\site-packages\vapoursynth\plugins\`（vsort 需建 `vsort\` 子目录放运行时）
-4. 解压 `vsmlrt-models.7z`（约 850MB）→ 模型放入
-   `.venv\Lib\site-packages\vapoursynth\plugins\models\`
-5. `python -m vapoursynth config` 生成配置，并把 `python3.dll`、`python312.dll`
-   复制到 `.venv\` 根目录（VSScript 探测需要）
+`setup.py` 自动完成：
+1. 检查 Python ≥ 3.12（VapourSynth wheel 要求），创建 `.venv`
+2. `pip install -r requirements.txt`（numpy、onnx）
+3. 从官方 GitHub Release 下载 **VapourSynth R79**（portable zip 内含 cp312 wheel）并安装
+4. **下载模型 + vsmlrt 后端**（`fetch_models.py`，约 930MB）：
+   - `vsmlrt-windows-x64-generic-gpu`（843MB）：RealESRGAN/CUGAN/waifu2x 全部 SR 模型
+     + vsort（DirectML 后端：onnxruntime + DirectML.dll）
+   - `external-models` 的 5 个新版 RIFE 模型（v4.15_lite / v4.17_lite / v4.22_lite /
+     v4.26 / v4.26_heavy，约 90MB）
+5. 下载 **mpv**（shinchiro 最新静态构建，解压到 `realtime-interp\mpv\`，配套的
+   `portable_config\` 已在仓库内）
+6. **ffmpeg**：优先使用系统 PATH 里已安装的 ffmpeg；没有则从 gyan.dev 自动下载到
+   `realtime-interp\ffmpeg\`
+7. 复制 `python3.dll` / `python312.dll` 到 `.venv\` 根（VSScript 探测需要），
+   生成 vapoursynth 配置，最后跑 `python ofps.py gpu` 验证
 
-> 需要完整运行（含所有模型）时最省事的方式：直接把本机原 `.venv\` 整个复制过来。
-> 首次运行请 `python ofps.py gpu` 验证显卡探测，再 `python ofps.py` 进菜单。
+完成后：`python ofps.py menu`。
 
-## 3. 运行
+## 可选参数
 
-```bat
-python ofps.py menu
 ```
-入口会检测并自动使用 `.venv\Scripts\python.exe` 重新执行。
+python setup.py --skip-models   # 已有 models/ 时跳过下载
+python setup.py --skip-mpv      # mpv 稍后手动放置
+python setup.py --skip-ffmpeg   # ffmpeg 用 PATH 里的
+```
 
-## 4. 可选：模型/素材放回
+## 组件来源（均官方）
 
-- 测试视频放 `video\`（已被 .gitignore 忽略）
-- 更新备份：`python ofps.py` 之外，重新压缩 `downloads` 源目录即可（见 ARCHITECTURE.md）
+| 组件 | 来源 |
+|---|---|
+| VapourSynth R79 | github.com/vapoursynth/vapoursynth releases（wheel 在 portable zip 内） |
+| vsmlrt 后端 + SR 模型 | github.com/AmusementClub/vs-mlrt releases（v15.16 generic-gpu 包） |
+| RIFE 新模型 | 同上，external-models release |
+| mpv | github.com/shinchiro/mpv-winbuild-cmake releases（x86_64 静态构建） |
+| ffmpeg | gyan.dev release essentials，或系统 PATH |
+
+## 环境要求
+
+- **Python 3.12+**（Windows）
+- **NVIDIA 显卡**（推理走 DirectML，本机 RTX 4060 实测；AMD 也可试，Intel 核显很慢）
+- 磁盘：模型 + venv + 运行时约 2.5GB；首次安装需下载约 1.1GB
+
+## 手动部署（不想用 setup.py 时）
+
+按上面来源表手动下载解压到对应位置即可；模型目录结构必须为：
+
+```
+models/
+├── rife/        # RIFE 主模型 rife_v4.22_lite.onnx 等
+├── rife_v2/     # RIFE 合并模型 (与主模型成对, 否则报 "expects 7 input planes")
+├── RealESRGANv2/  cugan/  waifu2x/  dpir/
+```
+
+> 注意：`realtime-interp\vsmlrt\scripts\vsmlrt.py` 已升级到 v15.16 并打补丁支持
+> `VSMLRT_MODELS_PATH` 环境变量（ofps.py 自动注入为项目 `models\` 目录）。
+> RIFE 主模型与 rife_v2 合并模型必须来自同一版本，混用会报错。
+
+## 离线/无网环境
+
+把本机原 `.venv\` 与 `models\` 目录整个复制过去即可（最省事）；模型也可从
+`downloads_backup.7z`（根目录备份包）中的 `vsmlrt-models.7z` 解压。
