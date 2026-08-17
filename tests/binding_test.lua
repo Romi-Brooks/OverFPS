@@ -1,0 +1,8 @@
+-- 测试工具: 验证我们的 lua 快捷键绑定是否注册 (按名称触发)
+mp.add_timeout(1.0, function()
+    local ok1 = mp.commandv("script-binding", "osd_status/ofps-osd-toggle")
+    print("BIND_OSD=" .. tostring(ok1))
+    local ok3 = mp.commandv("script-binding", "sub_loader/ofps-load-subs")
+    print("BIND_SUBS=" .. tostring(ok3))
+    mp.commandv("quit")
+end)

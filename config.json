@@ -1,0 +1,12 @@
+{
+  "model": "v4_26_heavy",
+  "scale": "1.0",
+  "sr": "realesrgan",
+  "sr_model": "2",
+  "gpu": "1",
+  "fp16": "1",
+  "buffered": "8",
+  "concurrent": "4",
+  "osd": "1",
+  "auto_res": "1"
+}
