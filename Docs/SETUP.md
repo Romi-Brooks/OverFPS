@@ -50,26 +50,19 @@ python setup.py --skip-ffmpeg   # ffmpeg 用 PATH 里的
 
 ## 环境要求
 
-- **Python 3.12+**（Windows）
-- **NVIDIA 显卡**（推理走 DirectML，本机 RTX 4060 实测；AMD 也可试，Intel 核显很慢）
-- 磁盘：模型 + venv + 运行时约 2.5GB；首次安装需下载约 1.1GB
+- **Python 3.12+**
 
-## 手动部署（不想用 setup.py 时）
+## 手动部署
 
 按上面来源表手动下载解压到对应位置即可；模型目录结构必须为：
 
 ```
 models/
-├── rife/        # RIFE 主模型 rife_v4.22_lite.onnx 等
-├── rife_v2/     # RIFE 合并模型 (与主模型成对, 否则报 "expects 7 input planes")
+├── rife/        # RIFE 主模型
+├── rife_v2/     # RIFE 合并模型
 ├── RealESRGANv2/  cugan/  waifu2x/  dpir/
 ```
 
 > 注意：`runtime\vsmlrt\scripts\vsmlrt.py` 已升级到 v15.16 并打补丁支持
 > `VSMLRT_MODELS_PATH` 环境变量（overfps.py 自动注入为项目 `models\` 目录）。
 > RIFE 主模型与 rife_v2 合并模型必须来自同一版本，混用会报错。
-
-## 离线/无网环境
-
-把本机原 `.venv\` 与 `models\` 目录整个复制过去即可（最省事）；模型也可从
-`downloads_backup.7z`（根目录备份包）中的 `vsmlrt-models.7z` 解压。

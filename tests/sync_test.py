@@ -76,8 +76,8 @@ def main():
             continue
         print("== %s ==" % name)
         print("   跳转前(0-1.5s)     : %s" % window_stats(rows, 0, 1.5))
-        print("   跳30s后(29.5-36s)  : %s" % window_stats(rows, 29.5, 36))
-        print("   跳200s后(199.5-206): %s" % window_stats(rows, 199.5, 206))
+        print("   跳15s后(14.5-21s)  : %s" % window_stats(rows, 14.5, 21))
+        print("   跳45s后(44.5-51s)  : %s" % window_stats(rows, 44.5, 51))
         print("   全程最大|avsync|   : %s" % window_stats(rows, 0, 999))
 
 
