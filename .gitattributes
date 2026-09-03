@@ -1,0 +1,2 @@
+# Third-party Anime4K shaders are vendored dependencies, not project source.
+runtime/shaders/** linguist-vendored
